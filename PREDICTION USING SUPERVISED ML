@@ -1,0 +1,52 @@
+#POOJA GARATE
+#The Sparks Foundation
+#Data Science And Business Analytics Intern
+#Task 1
+#Prediction using supervised learning
+
+#Installing packages
+install.packages("Metrics")
+install.packages("caTools")
+
+#Loading libraries
+library(caTools)
+library(Metrics)
+rm(list=ls())
+
+
+#Importing data
+df <- read.csv("https://raw.githubusercontent.com/AdiPersonalWorks/Random/master/student_scores%20-%20student_scores.csv")
+
+#Assigning variables
+h <- df$Hours 
+s <- df$Scores
+
+#Spliting the data into test and train
+data1= sample.split(s,SplitRatio = 0.90)
+#subsetting into Train data
+train_data =subset(df,data1==TRUE)
+#subsetting into Test data
+test_data =subset(df,data1==FALSE)
+
+##Creating Model
+Model=lm(s~h,data=train_data)
+Model
+
+#Plotting the data
+plot(train_data$Scores~train_data$Hours,xlab="Hours",ylab="Scores",)
+abline(Model)
+print(summary(Model))
+
+#Predicting
+result_test <-predict(object=Model,newdata = test_data)
+result_test
+
+#Calculating Mean square error
+z=data.frame(result_test,s)
+mse<- sqrt(mean((z$s-z$result_test)^2))
+mse
+
+#Final predicted value
+new_data_point<-data.frame(h=9.25)
+end_result<-predict(Model,new_data_point)
+print(end_result)
